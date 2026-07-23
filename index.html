@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KBS Kalanjali 2026 Trivandrum Registration</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo-wrap" aria-label="Organization logo">
+        <div class="logo">
+          <img src="logo.png" alt="KBS logo" />
+        </div>
+        <div class="logo no-bg">
+          <img height="150" src="kalanjali-logo.png" alt="KBS logo" />
+        </div>
+      </div>
+
+      <h1>KBS Kalanjali 2026 - Trivandrum District</h1>
+      <p class="subheading">Participant registration.</p>
+
+      <form id="participantForm">
+        <div class="form-grid">
+          <label>
+            Name
+            <input type="text" id="name" name="name" required />
+          </label>
+
+          <label>
+            Date of Birth
+            <input type="date" id="dob" name="dob" required max="2025-01-01" />
+          </label>
+
+          <label>
+            Age
+            <input type="text" id="age" name="age" readonly />
+          </label>
+
+          <label>
+            Gender
+            <select id="gender" name="gender" required>
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </label>
+
+          <label>
+            Mobile Number
+            <input
+              type="tel"
+              id="mobile"
+              name="mobile"
+              inputmode="numeric"
+              maxlength="10"
+              placeholder="Enter 10-digit number"
+              required
+            />
+          </label>
+
+          <label>
+            Aadhar Number
+            <input
+              type="text"
+              id="aadhar"
+              name="aadhar"
+              maxlength="14"
+              placeholder="XXXX-XXXX-XXXX"
+              required
+            />
+          </label>
+
+          <label>
+            Upasabha
+            <select id="upasabha" name="upasabha" required></select>
+          </label>
+
+          <input type="hidden" id="category" name="category" />
+          <!-- Hidden field to store matched subcategory (determined from DOB) -->
+          <input type="hidden" id="subcategory" name="subcategory" />
+
+          <label class="full-width">
+            Events
+            <div class="field-hint">You could select all the events he/she is participating by selecting each of them</div>
+            <div class="event-picker">
+              <div id="eventsDisplay" class="event-display" tabindex="0">
+                <span class="event-placeholder">Select events</span>
+              </div>
+              <div id="eventsDropdown" class="event-dropdown" hidden>
+                <input type="text" id="eventsSearch" class="event-search" placeholder="Search events" />
+                <div id="eventsContainer" class="event-options" aria-label="Events"></div>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <button type="submit" disabled>Submit</button>
+      </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="categoryRules.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
