@@ -433,7 +433,12 @@ function renderEventCheckboxes(filter = "") {
 }
 
 function calculateAge(dateOfBirth) {
-  if (!dateOfBirth) return "";
+  if (!dateOfBirth) {
+    document.getElementById("eventLabel").textContent = "(Select your Date of Birth and Gender to display the eligible events.).";
+    return "";
+  }
+
+  document.getElementById("eventLabel").textContent = "";
 
   var today = new Date();
   var birthDate = new Date(dateOfBirth);
