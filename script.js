@@ -56,7 +56,7 @@ if (!supabaseClient) console.warn("Supabase client not initialized — DB calls 
 else console.log("Supabase client initialized");
 
 // ==========================================
-// FIELD VALIDATION HELPER FUNCTIONS
+// FIELD VALIDATION & ERROR HELPERS
 // ==========================================
 
 function showFieldError(fieldId, message) {
@@ -121,7 +121,7 @@ function validateField(fieldId) {
       if (!value) {
         showFieldError(fieldId, "School/College name is required.");
         return false;
-      } else if (value.length < 2) {
+      } else if (value !== "Not Applicable" && value.length < 2) {
         showFieldError(fieldId, "School/College name is too short.");
         return false;
       }
@@ -231,8 +231,7 @@ function isFormComplete() {
 function updateSubmitButtonState() {
   const submitButton = document.querySelector('#participantForm button[type="submit"]');
   if (!submitButton) return;
-  
-  // Re-run field checks without forcing error UI display during initial typing
+
   const isComplete =
     (document.getElementById("name")?.value.trim() || "").length >= 2 &&
     (document.getElementById("dob")?.value.trim() || "").length > 0 &&
@@ -271,15 +270,21 @@ function populateSelect(selectElement, options, placeholder = "Select an option"
 
 function initializeForm() {
   populateSelect(document.getElementById("upasabha"), upasabhaOptions, "Select Upasabha");
+
   const catElem = document.getElementById("category");
   if (catElem) catElem.value = "";
   const subElem = document.getElementById("subcategory");
   if (subElem) subElem.value = "";
+
+  const classField = document.getElementById("classStudying");
+  const schoolField = document.getElementById("schoolCollege");
+  if (classField) classField.readOnly = false;
+  if (schoolField) schoolField.readOnly = false;
+
   dynamicEventOptions = [];
   eventTypeByValue.clear();
   renderEventCheckboxes();
 
-  // Clear all error messages on init
   [
     "name",
     "dob",
@@ -525,9 +530,42 @@ function renderEventCheckboxes(filter = "") {
   });
 }
 
+function autoFillEducationByAge(age) {
+  const classField = document.getElementById("classStudying");
+  const schoolField = document.getElementById("schoolCollege");
+
+  if (!classField || !schoolField) return;
+
+  if (typeof age === "number" && age > 20) {
+    classField.value = "Not Applicable";
+    schoolField.value = "Not Applicable";
+
+    classField.readOnly = true;
+    schoolField.readOnly = true;
+
+    clearFieldError("classStudying");
+    clearFieldError("schoolCollege");
+  } else {
+    if (classField.value === "Not Applicable") {
+      classField.value = "";
+      classField.readOnly = false;
+    }
+    if (schoolField.value === "Not Applicable") {
+      schoolField.value = "";
+      schoolField.readOnly = false;
+    }
+  }
+
+  validateField("classStudying");
+  validateField("schoolCollege");
+  updateSubmitButtonState();
+}
+
 function calculateAge(dateOfBirth) {
   if (!dateOfBirth) {
-    document.getElementById("eventLabel").textContent = "(Select your Date of Birth and Gender to display eligible events.).";
+    document.getElementById("eventLabel").textContent =
+      "(Select your Date of Birth and Gender to display eligible events.).";
+    autoFillEducationByAge(null);
     return "";
   }
 
@@ -540,6 +578,9 @@ function calculateAge(dateOfBirth) {
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
     age--;
   }
+
+  autoFillEducationByAge(age);
+
   return age;
 }
 
@@ -833,7 +874,6 @@ if (aadharField) {
   });
 }
 
-// Register dynamic blur & input listeners across input fields
 function registerFieldValidation() {
   const fields = [
     "name",
@@ -851,10 +891,8 @@ function registerFieldValidation() {
   fields.forEach((fieldId) => {
     const field = document.getElementById(fieldId);
     if (field) {
-      // Validate instantly when focus leaves the input field
       field.addEventListener("blur", () => validateField(fieldId));
 
-      // Clear error as user corrects the field
       field.addEventListener("input", () => {
         validateField(fieldId);
         updateSubmitButtonState();
@@ -967,7 +1005,6 @@ if (participantForm) {
   participantForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    // Force validation pass across all fields before submit
     if (!isFormComplete()) {
       showSubmissionMessage("Validation Error", "Incomplete Form", "Please fix all highlighted errors before submitting.");
       return;
