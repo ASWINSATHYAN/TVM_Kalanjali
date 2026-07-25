@@ -75,11 +75,16 @@ function populateSelect(selectElement, options, placeholder = "Select an option"
   });
 }
 
+// Check form validity including the 4 mandatory additions
 function isFormComplete() {
   const name = document.getElementById("name")?.value.trim() || "";
   const dob = document.getElementById("dob")?.value.trim() || "";
   const age = document.getElementById("age")?.value.trim() || "";
   const gender = document.getElementById("gender")?.value.trim() || "";
+  const fatherName = document.getElementById("fatherName")?.value.trim() || "";
+  const motherName = document.getElementById("motherName")?.value.trim() || "";
+  const classStudying = document.getElementById("classStudying")?.value.trim() || "";
+  const schoolCollege = document.getElementById("schoolCollege")?.value.trim() || "";
   const mobile = document.getElementById("mobile")?.value.replace(/\D/g, "").trim() || "";
   const aadhar = document.getElementById("aadhar")?.value.replace(/\D/g, "").trim() || "";
   const upasabha = document.getElementById("upasabha")?.value.trim() || "";
@@ -91,6 +96,10 @@ function isFormComplete() {
     dob.length > 0 &&
     age.length > 0 &&
     gender.length > 0 &&
+    fatherName.length > 0 &&
+    motherName.length > 0 &&
+    classStudying.length > 0 &&
+    schoolCollege.length > 0 &&
     mobile.length === 10 &&
     aadhar.length === 12 &&
     upasabha.length > 0 &&
@@ -121,7 +130,6 @@ function getSelectedEvents() {
   return Array.from(document.querySelectorAll('#eventsContainer input[type="checkbox"]:checked')).map((option) => option.value);
 }
 
-// Normalize event type to standard casing: "Literary", "Solo", "Group"
 function normalizeEventType(type) {
   if (!type) return null;
   const raw = String(type).trim().toLowerCase();
@@ -145,7 +153,6 @@ function getSelectedEventTypeCounts(excludeValue = null) {
   return counts;
 }
 
-// Validation rule: Max 3 Literary, 3 Group, 5 Solo
 function validateEventSelection(value, eventType) {
   const normalizedType = normalizeEventType(eventType);
   if (!normalizedType) return true;
@@ -166,103 +173,21 @@ function validateEventSelection(value, eventType) {
   return true;
 }
 
-// function renderSelectedEvents() {
-//   const display = document.getElementById("eventsDisplay");
-//   if (!display) return;
-//   const selectedEvents = getSelectedEvents();
-
-//   display.innerHTML = "";
-
-//   if (selectedEvents.length === 0) {
-//     const placeholder = document.createElement("span");
-//     placeholder.className = "event-placeholder";
-//     placeholder.textContent = "Select events";
-//     display.appendChild(placeholder);
-//     return;
-//   }
-
-//   selectedEvents.forEach((eventName) => {
-//     const chip = document.createElement("span");
-//     chip.className = "event-chip";
-//     // Stop click on the chip from triggering parent toggle/actions
-//     chip.addEventListener("click", (event) => {
-//       event.stopPropagation();
-//     });
-
-//     const label = document.createElement("span");
-//     label.textContent = eventName;
-
-//     const removeButton = document.createElement("button");
-//     removeButton.type = "button";
-//     removeButton.className = "event-chip-remove";
-//     removeButton.textContent = "×";
-//     removeButton.addEventListener("click", (event) => {
-//       event.stopPropagation(); // Explicitly handle removal ONLY here
-//       const checkbox = Array.from(
-//         document.querySelectorAll('#eventsContainer input[type="checkbox"]')
-//       ).find((input) => input.value === eventName);
-
-//       if (checkbox) {
-//         checkbox.checked = false;
-//         renderSelectedEvents();
-//         updateSubmitButtonState();
-//       }
-//     });
-
-//     chip.appendChild(label);
-//     chip.appendChild(removeButton);
-//     display.appendChild(chip);
-//   });
-//   // selectedEvents.forEach((eventName) => {
-//   //   const chip = document.createElement("span");
-//   //   chip.className = "event-chip";
-//   //   chip.addEventListener("click", (event) => {
-//   //     event.stopPropagation();
-//   //   });
-
-//   //   const label = document.createElement("span");
-//   //   label.textContent = eventName;
-
-//   //   const removeButton = document.createElement("button");
-//   //   removeButton.type = "button";
-//   //   removeButton.className = "event-chip-remove";
-//   //   removeButton.textContent = "×";
-//   //   removeButton.addEventListener("click", (event) => {
-//   //     event.stopPropagation();
-//   //     const checkbox = Array.from(document.querySelectorAll('#eventsContainer input[type="checkbox"]')).find((input) => input.value === eventName);
-//   //     if (checkbox) {
-//   //       checkbox.checked = false;
-//   //       renderSelectedEvents();
-//   //       updateSubmitButtonState();
-//   //     }
-//   //   });
-
-//   //   chip.appendChild(label);
-//   //   chip.appendChild(removeButton);
-//   //   display.appendChild(chip);
-//   // });
-// }
-
 function renderSelectedEvents() {
   const display = document.getElementById("eventsDisplay");
   const eventsSearch = document.getElementById("eventsSearch");
   if (!display) return;
 
   const selectedEvents = getSelectedEvents();
-
-  // Clear existing chips/tags
   display.innerHTML = "";
 
-  // 1. Render each selected event as a static, read-only tag
   selectedEvents.forEach((eventName) => {
     const chip = document.createElement("span");
     chip.className = "event-chip";
-    chip.textContent = eventName; // Plain text only — no '×' button
-
+    chip.textContent = eventName;
     display.appendChild(chip);
   });
 
-  // 2. Re-attach the search input field back to the container
   if (eventsSearch) {
     display.appendChild(eventsSearch);
   }
@@ -322,9 +247,9 @@ async function updateEventsForCategory(category, matchedSubcats, genderValue) {
   eventTypeByValue.clear();
   dynamicEventOptions = Array.isArray(localCategoryEvents[category])
     ? localCategoryEvents[category].map((label) => {
-      eventTypeByValue.set(label, null);
-      return { value: label, label, type: null, category };
-    })
+        eventTypeByValue.set(label, null);
+        return { value: label, label, type: null, category };
+      })
     : [];
   renderEventCheckboxes();
 }
@@ -361,12 +286,10 @@ function renderEventCheckboxes(filter = "") {
     section.style.paddingBottom = "10px";
     section.style.marginBottom = "10px";
 
-    // Add border separator between sections except after the last section
     if (index < categoryKeys.length - 1) {
       section.style.borderBottom = "1px solid #e2e8f0";
     }
 
-    // Category heading styled with Bold and Underline
     const title = document.createElement("h3");
     title.className = "event-category-title event-category-heading";
     title.style.fontWeight = "bold";
@@ -401,12 +324,10 @@ function renderEventCheckboxes(filter = "") {
       checkbox.value = eventValue;
       checkbox.checked = getSelectedEvents().includes(eventValue);
 
-      // Force checkbox to stay inline without stacking or shrinking
       checkbox.style.display = "inline-block";
       checkbox.style.margin = "0";
       checkbox.style.flexShrink = "0";
 
-      // Event-type limit validation listener
       checkbox.addEventListener("change", () => {
         if (checkbox.checked && !validateEventSelection(eventValue, eventType)) {
           checkbox.checked = false;
@@ -418,7 +339,6 @@ function renderEventCheckboxes(filter = "") {
 
       const text = document.createElement("span");
       text.textContent = eventLabel;
-      // Ensure span stays on the right side of checkbox
       text.style.display = "inline-block";
       text.style.textAlign = "left";
       text.style.lineHeight = "1.3";
@@ -682,22 +602,18 @@ const eventsDropdown = document.getElementById("eventsDropdown");
 const eventsSearch = document.getElementById("eventsSearch");
 
 if (eventsDisplay && eventsDropdown) {
-  // Prevent clicking inside the search bar from closing/toggling the dropdown unexpectedly
   if (eventsSearch) {
     eventsSearch.addEventListener("click", (e) => {
       e.stopPropagation();
-      eventsDropdown.hidden = false; // Keep open when typing/clicking search
+      eventsDropdown.hidden = false;
     });
 
     eventsSearch.addEventListener("input", (e) => {
-      // Filter checkbox list based on query
       renderEventCheckboxes(e.target.value); 
     });
   }
 
-  // Toggle dropdown on container whitespace click
   eventsDisplay.addEventListener("click", (e) => {
-    // If user clicked directly on search input, do nothing extra
     if (e.target === eventsSearch) return;
 
     eventsDropdown.hidden = !eventsDropdown.hidden;
@@ -707,7 +623,6 @@ if (eventsDisplay && eventsDropdown) {
     }
   });
 
-  // Close dropdown when clicking outside the component
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".event-picker")) {
       eventsDropdown.hidden = true;
@@ -743,8 +658,20 @@ if (aadharField) {
   });
 }
 
+// Register live validation on all mandatory inputs
 function registerFieldValidation() {
-  ["name", "dob", "gender", "mobile", "aadhar", "upasabha"].forEach((fieldId) => {
+  [
+    "name",
+    "dob",
+    "gender",
+    "fatherName",
+    "motherName",
+    "classStudying",
+    "schoolCollege",
+    "mobile",
+    "aadhar",
+    "upasabha"
+  ].forEach((fieldId) => {
     const field = document.getElementById(fieldId);
     if (field) {
       field.addEventListener("input", updateSubmitButtonState);
@@ -755,12 +682,9 @@ function registerFieldValidation() {
   const eventsContainer = document.getElementById("eventsContainer");
   if (eventsContainer) {
     eventsContainer.addEventListener("change", (e) => {
-      // Only trigger if the changed element is a checkbox
       if (e.target.matches('input[type="checkbox"]')) {
-        // Re-render tags based on current checkbox states
         renderSelectedEvents();
 
-        // Run any validation / submit button updates you have
         if (typeof updateSubmitButtonState === "function") {
           updateSubmitButtonState();
         }
@@ -783,6 +707,7 @@ function generateParticipantId() {
   return `PART-${timestamp}-${randomSuffix}`;
 }
 
+// Build output payload with the new fields
 function getRegistrationPayload() {
   const selectedEvents = Array.from(document.querySelectorAll('#eventsContainer input[type="checkbox"]:checked'))
     .map((option) => option.value)
@@ -795,11 +720,15 @@ function getRegistrationPayload() {
     name: document.getElementById("name").value.trim(),
     date_of_birth: document.getElementById("dob").value,
     age: parseInt(document.getElementById("age").value, 10) || null,
+    gender: document.getElementById("gender").value,
+    father_name: document.getElementById("fatherName").value.trim(),
+    mother_name: document.getElementById("motherName").value.trim(),
+    class_studying: document.getElementById("classStudying").value.trim(),
+    school_college: document.getElementById("schoolCollege").value.trim(),
     mobile_number: document.getElementById("mobile").value,
     aadhar_number: document.getElementById("aadhar").value.replace(/\D/g, ""),
     upasabha: document.getElementById("upasabha").value,
     category: document.getElementById("category").value,
-    gender: document.getElementById("gender").value,
     event_type: subcatVal,
     events: selectedEvents,
     created_at: new Date().toISOString(),

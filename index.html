@@ -46,6 +46,28 @@
             </select>
           </label>
 
+          <!-- NEW MANDATORY FIELDS -->
+          <label>
+            Name of Father
+            <input type="text" id="fatherName" name="fatherName" placeholder="Father's full name" required />
+          </label>
+
+          <label>
+            Name of Mother
+            <input type="text" id="motherName" name="motherName" placeholder="Mother's full name" required />
+          </label>
+
+          <label>
+            Studying in Class / Standard
+            <input type="text" id="classStudying" name="classStudying" placeholder="e.g. 10th / Degree / Masters" required />
+          </label>
+
+          <label>
+            Name of School / College
+            <input type="text" id="schoolCollege" name="schoolCollege" placeholder="School or College name" required />
+          </label>
+          <!-- END NEW FIELDS -->
+
           <label>
             Mobile Number
             <input
@@ -60,7 +82,7 @@
           </label>
 
           <label>
-            Aadhar Number
+            Identity Number
             <input
               type="text"
               id="aadhar"
@@ -77,7 +99,6 @@
           </label>
 
           <input type="hidden" id="category" name="category" />
-          <!-- Hidden field to store matched subcategory (determined from DOB) -->
           <input type="hidden" id="subcategory" name="subcategory" />
 
           <label class="full-width">
