@@ -24,7 +24,6 @@ const upasabhaOptions = [
 
 const eventOptions = [];
 
-// Simple local event list per category (fallback)
 const localCategoryEvents = {
   Balolsavam: [],
   Yuvajanotsavam: [],
@@ -56,6 +55,201 @@ try {
 if (!supabaseClient) console.warn("Supabase client not initialized — DB calls will be skipped.");
 else console.log("Supabase client initialized");
 
+// ==========================================
+// FIELD VALIDATION HELPER FUNCTIONS
+// ==========================================
+
+function showFieldError(fieldId, message) {
+  const field = document.getElementById(fieldId);
+  const errorElem = document.getElementById(`${fieldId}-error`);
+  if (field) field.classList.add("invalid");
+  if (errorElem) errorElem.textContent = message;
+}
+
+function clearFieldError(fieldId) {
+  const field = document.getElementById(fieldId);
+  const errorElem = document.getElementById(`${fieldId}-error`);
+  if (field) field.classList.remove("invalid");
+  if (errorElem) errorElem.textContent = "";
+}
+
+function validateField(fieldId) {
+  const field = document.getElementById(fieldId);
+  if (!field) return true;
+
+  const value = field.value.trim();
+
+  switch (fieldId) {
+    case "name":
+      if (!value) {
+        showFieldError(fieldId, "Participant name is required.");
+        return false;
+      } else if (value.length < 2) {
+        showFieldError(fieldId, "Name must be at least 2 characters.");
+        return false;
+      }
+      break;
+
+    case "fatherName":
+      if (!value) {
+        showFieldError(fieldId, "Father's name is required.");
+        return false;
+      } else if (value.length < 2) {
+        showFieldError(fieldId, "Name must be at least 2 characters.");
+        return false;
+      }
+      break;
+
+    case "motherName":
+      if (!value) {
+        showFieldError(fieldId, "Mother's name is required.");
+        return false;
+      } else if (value.length < 2) {
+        showFieldError(fieldId, "Name must be at least 2 characters.");
+        return false;
+      }
+      break;
+
+    case "classStudying":
+      if (!value) {
+        showFieldError(fieldId, "Standard/Class is required.");
+        return false;
+      }
+      break;
+
+    case "schoolCollege":
+      if (!value) {
+        showFieldError(fieldId, "School/College name is required.");
+        return false;
+      } else if (value.length < 2) {
+        showFieldError(fieldId, "School/College name is too short.");
+        return false;
+      }
+      break;
+
+    case "dob":
+      if (!value) {
+        showFieldError(fieldId, "Date of birth is required.");
+        return false;
+      } else if (new Date(value) > new Date()) {
+        showFieldError(fieldId, "Date of birth cannot be in the future.");
+        return false;
+      }
+      break;
+
+    case "gender":
+      if (!value) {
+        showFieldError(fieldId, "Please select a gender.");
+        return false;
+      }
+      break;
+
+    case "upasabha":
+      if (!value) {
+        showFieldError(fieldId, "Please select an Upasabha.");
+        return false;
+      }
+      break;
+
+    case "mobile":
+      const digitsOnlyMobile = value.replace(/\D/g, "");
+      if (!digitsOnlyMobile) {
+        showFieldError(fieldId, "Mobile number is required.");
+        return false;
+      } else if (digitsOnlyMobile.length !== 10) {
+        showFieldError(fieldId, "Mobile number must be exactly 10 digits.");
+        return false;
+      } else if (!/^[6-9]\d{9}$/.test(digitsOnlyMobile)) {
+        showFieldError(fieldId, "Enter a valid 10-digit mobile number.");
+        return false;
+      }
+      break;
+
+    case "aadhar":
+      const digitsOnlyAadhar = value.replace(/\D/g, "");
+      if (!digitsOnlyAadhar) {
+        showFieldError(fieldId, "Identity number is required.");
+        return false;
+      } else if (digitsOnlyAadhar.length !== 12) {
+        showFieldError(fieldId, "Identity number must be exactly 12 digits.");
+        return false;
+      }
+      break;
+
+    default:
+      break;
+  }
+
+  clearFieldError(fieldId);
+  return true;
+}
+
+function validateEventsSelection() {
+  const selectedEvents = getSelectedEvents();
+  const errorElem = document.getElementById("events-error");
+
+  if (selectedEvents.length === 0) {
+    if (errorElem) errorElem.textContent = "Please select at least one event.";
+    return false;
+  }
+
+  if (errorElem) errorElem.textContent = "";
+  return true;
+}
+
+function isFormComplete() {
+  const nameValid = validateField("name");
+  const dobValid = validateField("dob");
+  const genderValid = validateField("gender");
+  const fatherValid = validateField("fatherName");
+  const motherValid = validateField("motherName");
+  const classValid = validateField("classStudying");
+  const schoolValid = validateField("schoolCollege");
+  const mobileValid = validateField("mobile");
+  const aadharValid = validateField("aadhar");
+  const upasabhaValid = validateField("upasabha");
+  const eventsValid = validateEventsSelection();
+
+  const category = document.getElementById("category")?.value.trim() || "";
+
+  return (
+    nameValid &&
+    dobValid &&
+    genderValid &&
+    fatherValid &&
+    motherValid &&
+    classValid &&
+    schoolValid &&
+    mobileValid &&
+    aadharValid &&
+    upasabhaValid &&
+    category.length > 0 &&
+    eventsValid
+  );
+}
+
+function updateSubmitButtonState() {
+  const submitButton = document.querySelector('#participantForm button[type="submit"]');
+  if (!submitButton) return;
+  
+  // Re-run field checks without forcing error UI display during initial typing
+  const isComplete =
+    (document.getElementById("name")?.value.trim() || "").length >= 2 &&
+    (document.getElementById("dob")?.value.trim() || "").length > 0 &&
+    (document.getElementById("gender")?.value.trim() || "").length > 0 &&
+    (document.getElementById("fatherName")?.value.trim() || "").length >= 2 &&
+    (document.getElementById("motherName")?.value.trim() || "").length >= 2 &&
+    (document.getElementById("classStudying")?.value.trim() || "").length > 0 &&
+    (document.getElementById("schoolCollege")?.value.trim() || "").length >= 2 &&
+    (document.getElementById("mobile")?.value.replace(/\D/g, "") || "").length === 10 &&
+    (document.getElementById("aadhar")?.value.replace(/\D/g, "") || "").length === 12 &&
+    (document.getElementById("upasabha")?.value.trim() || "").length > 0 &&
+    (document.getElementById("category")?.value.trim() || "").length > 0 &&
+    getSelectedEvents().length > 0;
+
+  submitButton.disabled = !isComplete;
+}
+
 function populateSelect(selectElement, options, placeholder = "Select an option") {
   if (!selectElement) return;
   selectElement.innerHTML = "";
@@ -75,45 +269,6 @@ function populateSelect(selectElement, options, placeholder = "Select an option"
   });
 }
 
-// Check form validity including the 4 mandatory additions
-function isFormComplete() {
-  const name = document.getElementById("name")?.value.trim() || "";
-  const dob = document.getElementById("dob")?.value.trim() || "";
-  const age = document.getElementById("age")?.value.trim() || "";
-  const gender = document.getElementById("gender")?.value.trim() || "";
-  const fatherName = document.getElementById("fatherName")?.value.trim() || "";
-  const motherName = document.getElementById("motherName")?.value.trim() || "";
-  const classStudying = document.getElementById("classStudying")?.value.trim() || "";
-  const schoolCollege = document.getElementById("schoolCollege")?.value.trim() || "";
-  const mobile = document.getElementById("mobile")?.value.replace(/\D/g, "").trim() || "";
-  const aadhar = document.getElementById("aadhar")?.value.replace(/\D/g, "").trim() || "";
-  const upasabha = document.getElementById("upasabha")?.value.trim() || "";
-  const category = document.getElementById("category")?.value.trim() || "";
-  const selectedEvents = getSelectedEvents();
-
-  return (
-    name.length > 0 &&
-    dob.length > 0 &&
-    age.length > 0 &&
-    gender.length > 0 &&
-    fatherName.length > 0 &&
-    motherName.length > 0 &&
-    classStudying.length > 0 &&
-    schoolCollege.length > 0 &&
-    mobile.length === 10 &&
-    aadhar.length === 12 &&
-    upasabha.length > 0 &&
-    category.length > 0 &&
-    selectedEvents.length > 0
-  );
-}
-
-function updateSubmitButtonState() {
-  const submitButton = document.querySelector('#participantForm button[type="submit"]');
-  if (!submitButton) return;
-  submitButton.disabled = !isFormComplete();
-}
-
 function initializeForm() {
   populateSelect(document.getElementById("upasabha"), upasabhaOptions, "Select Upasabha");
   const catElem = document.getElementById("category");
@@ -123,6 +278,22 @@ function initializeForm() {
   dynamicEventOptions = [];
   eventTypeByValue.clear();
   renderEventCheckboxes();
+
+  // Clear all error messages on init
+  [
+    "name",
+    "dob",
+    "gender",
+    "fatherName",
+    "motherName",
+    "classStudying",
+    "schoolCollege",
+    "mobile",
+    "aadhar",
+    "upasabha",
+    "events"
+  ].forEach(clearFieldError);
+
   updateSubmitButtonState();
 }
 
@@ -191,6 +362,8 @@ function renderSelectedEvents() {
   if (eventsSearch) {
     display.appendChild(eventsSearch);
   }
+
+  validateEventsSelection();
 }
 
 async function updateEventsForCategory(category, matchedSubcats, genderValue) {
@@ -354,7 +527,7 @@ function renderEventCheckboxes(filter = "") {
 
 function calculateAge(dateOfBirth) {
   if (!dateOfBirth) {
-    document.getElementById("eventLabel").textContent = "(Select your Date of Birth and Gender to display the eligible events.).";
+    document.getElementById("eventLabel").textContent = "(Select your Date of Birth and Gender to display eligible events.).";
     return "";
   }
 
@@ -646,6 +819,7 @@ const mobileField = document.getElementById("mobile");
 if (mobileField) {
   mobileField.addEventListener("input", (event) => {
     event.target.value = event.target.value.replace(/\D/g, "").slice(0, 10);
+    validateField("mobile");
     updateSubmitButtonState();
   });
 }
@@ -654,13 +828,14 @@ const aadharField = document.getElementById("aadhar");
 if (aadharField) {
   aadharField.addEventListener("input", (event) => {
     event.target.value = formatAadhaar(event.target.value);
+    validateField("aadhar");
     updateSubmitButtonState();
   });
 }
 
-// Register live validation on all mandatory inputs
+// Register dynamic blur & input listeners across input fields
 function registerFieldValidation() {
-  [
+  const fields = [
     "name",
     "dob",
     "gender",
@@ -671,11 +846,24 @@ function registerFieldValidation() {
     "mobile",
     "aadhar",
     "upasabha"
-  ].forEach((fieldId) => {
+  ];
+
+  fields.forEach((fieldId) => {
     const field = document.getElementById(fieldId);
     if (field) {
-      field.addEventListener("input", updateSubmitButtonState);
-      field.addEventListener("change", updateSubmitButtonState);
+      // Validate instantly when focus leaves the input field
+      field.addEventListener("blur", () => validateField(fieldId));
+
+      // Clear error as user corrects the field
+      field.addEventListener("input", () => {
+        validateField(fieldId);
+        updateSubmitButtonState();
+      });
+
+      field.addEventListener("change", () => {
+        validateField(fieldId);
+        updateSubmitButtonState();
+      });
     }
   });
 
@@ -684,7 +872,6 @@ function registerFieldValidation() {
     eventsContainer.addEventListener("change", (e) => {
       if (e.target.matches('input[type="checkbox"]')) {
         renderSelectedEvents();
-
         if (typeof updateSubmitButtonState === "function") {
           updateSubmitButtonState();
         }
@@ -707,7 +894,6 @@ function generateParticipantId() {
   return `PART-${timestamp}-${randomSuffix}`;
 }
 
-// Build output payload with the new fields
 function getRegistrationPayload() {
   const selectedEvents = Array.from(document.querySelectorAll('#eventsContainer input[type="checkbox"]:checked'))
     .map((option) => option.value)
@@ -780,6 +966,12 @@ const participantForm = document.getElementById("participantForm");
 if (participantForm) {
   participantForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    // Force validation pass across all fields before submit
+    if (!isFormComplete()) {
+      showSubmissionMessage("Validation Error", "Incomplete Form", "Please fix all highlighted errors before submitting.");
+      return;
+    }
 
     if (!supabaseClient) {
       showSubmissionMessage("Error", "Submission Failed", "Supabase is not configured yet. Please check your config.");

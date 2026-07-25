@@ -378,3 +378,26 @@ button:disabled {
   font-size: 16px;
   font-weight: 600;
 }
+
+/* Inline Error Messages */
+.error-msg {
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block;
+  min-height: 1.1rem; /* Prevents layout shifting when errors appear */
+  font-weight: 500;
+}
+
+/* Red border for input controls with errors */
+input.invalid,
+select.invalid {
+  border-color: #dc2626 !important;
+  background-color: #fef2f2;
+}
+
+input.invalid:focus,
+select.invalid:focus {
+  outline-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important;
+}

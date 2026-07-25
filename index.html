@@ -20,21 +20,24 @@
       <h1>KBS Kalanjali 2026 - Trivandrum District</h1>
       <p class="subheading">Participant registration. <span class="mandatory-text"><i>(All the fields are mandatory)</i></span> </p>
 
-      <form id="participantForm">
+      <form id="participantForm" novalidate>
         <div class="form-grid">
           <label>
             Name
             <input type="text" id="name" name="name" required />
+            <span class="error-msg" id="name-error"></span>
           </label>
 
           <label>
             Date of Birth
             <input type="date" id="dob" name="dob" required max="2025-01-01" />
+            <span class="error-msg" id="dob-error"></span>
           </label>
 
           <label>
             Age
             <input type="text" id="age" name="age" readonly />
+            <span class="error-msg" id="age-error"></span>
           </label>
 
           <label>
@@ -44,29 +47,32 @@
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
+            <span class="error-msg" id="gender-error"></span>
           </label>
 
-          <!-- NEW MANDATORY FIELDS -->
           <label>
             Name of Father
             <input type="text" id="fatherName" name="fatherName" placeholder="Father's full name" required />
+            <span class="error-msg" id="fatherName-error"></span>
           </label>
 
           <label>
             Name of Mother
             <input type="text" id="motherName" name="motherName" placeholder="Mother's full name" required />
+            <span class="error-msg" id="motherName-error"></span>
           </label>
 
           <label>
             Studying in Class / Standard
-            <input type="text" id="classStudying" name="classStudying" placeholder="e.g. 10th / Degree / Masters" required />
+            <input type="text" id="classStudying" name="classStudying" placeholder="e.g. 10th / Degree" required />
+            <span class="error-msg" id="classStudying-error"></span>
           </label>
 
           <label>
             Name of School / College
             <input type="text" id="schoolCollege" name="schoolCollege" placeholder="School or College name" required />
+            <span class="error-msg" id="schoolCollege-error"></span>
           </label>
-          <!-- END NEW FIELDS -->
 
           <label>
             Mobile Number
@@ -79,10 +85,11 @@
               placeholder="Enter 10-digit number"
               required
             />
+            <span class="error-msg" id="mobile-error"></span>
           </label>
 
           <label>
-            Aadhar Number
+            Identity Number
             <input
               type="text"
               id="aadhar"
@@ -91,11 +98,13 @@
               placeholder="XXXX-XXXX-XXXX"
               required
             />
+            <span class="error-msg" id="aadhar-error"></span>
           </label>
 
           <label>
             Upasabha
             <select id="upasabha" name="upasabha" required></select>
+            <span class="error-msg" id="upasabha-error"></span>
           </label>
 
           <input type="hidden" id="category" name="category" />
@@ -103,8 +112,8 @@
 
           <label class="full-width">
             <span>Events
-              <span id="eventLabel"><i>(Select your Date of Birth and Gender to display the eligible events.)</i></span></span>
-            <div class="field-hint">You could select all the events he/she is participating by selecting each of them</div>
+              <span id="eventLabel"><i>(Select your Date of Birth and Gender to display eligible events.)</i></span></span>
+            <div class="field-hint">You could select all events he/she is participating in by checking each of them</div>
             <div class="event-picker">
               <div id="eventsDisplay" class="event-display" tabindex="0">
                 <span class="event-placeholder">Select events</span>
@@ -114,6 +123,7 @@
                 <div id="eventsContainer" class="event-options" aria-label="Events"></div>
               </div>
             </div>
+            <span class="error-msg" id="events-error"></span>
           </label>
         </div>
 
