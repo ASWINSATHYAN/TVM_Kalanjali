@@ -1,138 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KBS Kalanjali 2026 Trivandrum Registration</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="logo-wrap" aria-label="Organization logo">
-        <div class="logo">
-          <img src="logo.png" alt="KBS logo" />
-        </div>
-        <div class="logo no-bg">
-          <img height="150" src="kalanjali-logo.png" alt="KBS logo" />
-        </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KBS Kalanjali 2026 Trivandrum Registration</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo-wrap" aria-label="Organization logo">
+      <div class="logo">
+        <img src="logo.png" alt="KBS logo" />
       </div>
-
-      <h1>KBS Kalanjali 2026 - Trivandrum District</h1>
-      <p class="subheading">Participant registration. <span class="mandatory-text"><i>(All the fields are mandatory)</i></span> </p>
-
-      <form id="participantForm" novalidate>
-        <div class="form-grid">
-          <label>
-            Name
-            <input type="text" id="name" name="name" required />
-            <span class="error-msg" id="name-error"></span>
-          </label>
-
-          <label>
-            Date of Birth
-            <input type="date" id="dob" name="dob" required max="2025-01-01" />
-            <span class="error-msg" id="dob-error"></span>
-          </label>
-
-          <label>
-            Age
-            <input type="text" id="age" name="age" readonly />
-            <span class="error-msg" id="age-error"></span>
-          </label>
-
-          <label>
-            Gender
-            <select id="gender" name="gender" required>
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-            <span class="error-msg" id="gender-error"></span>
-          </label>
-
-          <label>
-            Name of Father
-            <input type="text" id="fatherName" name="fatherName" placeholder="Father's full name" required />
-            <span class="error-msg" id="fatherName-error"></span>
-          </label>
-
-          <label>
-            Name of Mother
-            <input type="text" id="motherName" name="motherName" placeholder="Mother's full name" required />
-            <span class="error-msg" id="motherName-error"></span>
-          </label>
-
-          <label>
-            Studying in Class / Standard
-            <input type="text" id="classStudying" name="classStudying" placeholder="e.g. 10th / Degree" required />
-            <span class="error-msg" id="classStudying-error"></span>
-          </label>
-
-          <label>
-            Name of School / College
-            <input type="text" id="schoolCollege" name="schoolCollege" placeholder="School or College name" required />
-            <span class="error-msg" id="schoolCollege-error"></span>
-          </label>
-
-          <label>
-            Mobile Number
-            <input
-              type="tel"
-              id="mobile"
-              name="mobile"
-              inputmode="numeric"
-              maxlength="10"
-              placeholder="Enter 10-digit number"
-              required
-            />
-            <span class="error-msg" id="mobile-error"></span>
-          </label>
-
-          <label>
-            Identity Number
-            <input
-              type="text"
-              id="aadhar"
-              name="aadhar"
-              maxlength="14"
-              placeholder="XXXX-XXXX-XXXX"
-              required
-            />
-            <span class="error-msg" id="aadhar-error"></span>
-          </label>
-
-          <label>
-            Upasabha
-            <select id="upasabha" name="upasabha" required></select>
-            <span class="error-msg" id="upasabha-error"></span>
-          </label>
-
-          <input type="hidden" id="category" name="category" />
-          <input type="hidden" id="subcategory" name="subcategory" />
-
-          <label class="full-width">
-            <span>Events
-              <span id="eventLabel"><i>(Select your Date of Birth and Gender to display eligible events.)</i></span></span>
-            <div class="field-hint">You could select all events he/she is participating in by checking each of them</div>
-            <div class="event-picker">
-              <div id="eventsDisplay" class="event-display" tabindex="0">
-                <span class="event-placeholder">Select events</span>
-              </div>
-              <div id="eventsDropdown" class="event-dropdown" hidden>
-                <input type="text" id="eventsSearch" class="event-search" placeholder="Search events" />
-                <div id="eventsContainer" class="event-options" aria-label="Events"></div>
-              </div>
-            </div>
-            <span class="error-msg" id="events-error"></span>
-          </label>
-        </div>
-
-        <button type="submit" disabled>Submit</button>
-      </form>
+      <div class="logo no-bg">
+        <img height="150" src="kalanjali-logo.png" alt="KBS logo" />
+      </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="categoryRules.js"></script>
-    <script src="script.js"></script>
-  </body>
+    <h1>KBS Kalanjali 2026 - Trivandrum District</h1>
+    <p class="subheading">Participant registration. <span class="mandatory-text"><i>(All the fields are
+          mandatory)</i></span> </p>
+
+    <div class="disclaimer-note">
+      <strong>Note:</strong> Even though you submit your entry through this portal, the registration will be confirmed
+      only after the scrutiny of physical Form B.
+    </div>
+    
+    <form id="participantForm" novalidate>
+      <div class="form-grid">
+        <label>
+          Name
+          <input type="text" id="name" name="name" required />
+          <span class="error-msg" id="name-error"></span>
+        </label>
+
+        <label>
+          Date of Birth
+          <input type="date" id="dob" name="dob" required max="2025-01-01" />
+          <span class="error-msg" id="dob-error"></span>
+        </label>
+
+        <label>
+          Age
+          <input type="text" id="age" name="age" readonly />
+          <span class="error-msg" id="age-error"></span>
+        </label>
+
+        <label>
+          Gender
+          <select id="gender" name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          <span class="error-msg" id="gender-error"></span>
+        </label>
+
+        <label>
+          Name of Father
+          <input type="text" id="fatherName" name="fatherName" placeholder="Father's full name" required />
+          <span class="error-msg" id="fatherName-error"></span>
+        </label>
+
+        <label>
+          Name of Mother
+          <input type="text" id="motherName" name="motherName" placeholder="Mother's full name" required />
+          <span class="error-msg" id="motherName-error"></span>
+        </label>
+
+        <label>
+          Studying in Class / Standard
+          <input type="text" id="classStudying" name="classStudying" placeholder="e.g. 10th / Degree" required />
+          <span class="error-msg" id="classStudying-error"></span>
+        </label>
+
+        <label>
+          Name of School / College
+          <input type="text" id="schoolCollege" name="schoolCollege" placeholder="School or College name" required />
+          <span class="error-msg" id="schoolCollege-error"></span>
+        </label>
+
+        <label>
+          Mobile Number
+          <input type="tel" id="mobile" name="mobile" inputmode="numeric" maxlength="10"
+            placeholder="Enter 10-digit number" required />
+          <span class="error-msg" id="mobile-error"></span>
+        </label>
+
+        <label>
+          Identity Number
+          <input type="text" id="aadhar" name="aadhar" maxlength="14" placeholder="XXXX-XXXX-XXXX" required />
+          <span class="error-msg" id="aadhar-error"></span>
+        </label>
+
+        <label>
+          Upasabha
+          <select id="upasabha" name="upasabha" required></select>
+          <span class="error-msg" id="upasabha-error"></span>
+        </label>
+
+        <input type="hidden" id="category" name="category" />
+        <input type="hidden" id="subcategory" name="subcategory" />
+
+        <label class="full-width">
+          <span>Events
+            <span id="eventLabel"><i>(Select your Date of Birth and Gender to display eligible
+                events.)</i></span></span>
+          <div class="field-hint">You could select all events he/she is participating in by checking each of them</div>
+          <div class="event-picker">
+            <div id="eventsDisplay" class="event-display" tabindex="0">
+              <span class="event-placeholder">Select events</span>
+            </div>
+            <div id="eventsDropdown" class="event-dropdown" hidden>
+              <input type="text" id="eventsSearch" class="event-search" placeholder="Search events" />
+              <div id="eventsContainer" class="event-options" aria-label="Events"></div>
+            </div>
+          </div>
+          <span class="error-msg" id="events-error"></span>
+        </label>
+      </div>
+
+      <button type="submit" disabled>Submit</button>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="categoryRules.js"></script>
+  <script src="script.js"></script>
+</body>
+
 </html>
