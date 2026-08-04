@@ -168,10 +168,10 @@ function validateField(fieldId) {
     case "aadhar":
       const digitsOnlyAadhar = value.replace(/\D/g, "");
       if (!digitsOnlyAadhar) {
-        showFieldError(fieldId, "Identity number is required.");
+        showFieldError(fieldId, "Aadhar number is required.");
         return false;
       } else if (digitsOnlyAadhar.length !== 12) {
-        showFieldError(fieldId, "Identity number must be exactly 12 digits.");
+        showFieldError(fieldId, "Aadhar number must be exactly 12 digits.");
         return false;
       }
       break;
@@ -1025,7 +1025,7 @@ if (participantForm) {
       const alreadyRegistered = await isAadhaarRegistered(payload.aadhar_number);
 
       if (alreadyRegistered) {
-        showSubmissionMessage("Error", "Submission Failed", "Participant already registered with this identity number.");
+        showSubmissionMessage("Error", "Submission Failed", "Participant already registered with this Aadhar number.");
         return;
       }
 
